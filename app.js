@@ -3,11 +3,12 @@ var cheerio = require('cheerio');
 var fs = require('fs');
 var urlParser = require('url');
 
-var urlToScrape = 'https://capacitateparaelempleo.org/pages.php?r=.tema&tagID=2845';
+var urlToScrape = 'https://capacitateparaelempleo.org/pages.php?r=.tema&tagID=750';
 
 
 var urls = [];
 var titles = [];
+var splitTitles = [];
 
 request(urlToScrape, function(err, res, body){
 	if(!err && res.statusCode === 200){
@@ -22,13 +23,20 @@ request(urlToScrape, function(err, res, body){
 			urls.push(fixedUrl)
 			
 		});
-		//get the titles for each Object
-
 		
-
+		//get the titles for each Object
+		var $ = cheerio.load(body);
+		$('a', 'tbody').each(function() {
+			var title = $(this).text();
+			if(title == undefined)
+				return;
+			console.log(title)
+			titles.push(title)
+		});
 
 
 		//console.log(urls)
 	}
 
 });
+
